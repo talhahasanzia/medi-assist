@@ -17,6 +17,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -213,8 +215,19 @@ public class ConnectDeviceFragment extends Fragment {
                 if (pairedDevices != null && pairedDevices.size() > 0) {
                     BluetoothDevice bluetoothDevice = (BluetoothDevice) discoveredDevices.toArray()[position];
 
-                    if (bluetoothDevice != null)
+                    if (bluetoothDevice != null) {
                         ((EcgActivity) getActivity()).currentBluetoothDevice = bluetoothDevice;
+
+
+                        Slide slideTransition = new Slide(Gravity.RIGHT);
+                        slideTransition.setDuration(1000);
+                        EcgInputFragment ecgInputFragment=new EcgInputFragment();
+                        ecgInputFragment.setEnterTransition(slideTransition);
+                        ((EcgActivity) getActivity()).setCurrentScreen(ecgInputFragment);
+
+                        ((EcgActivity) getActivity()).currentScreen = 1;
+
+                    }
                 }
             }
         });

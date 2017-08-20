@@ -1,44 +1,80 @@
 package com.bsn.mediassist.workers;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
 import java.util.UUID;
 
 public class ConnectThread extends Thread {
-    private BluetoothSocket bTSocket;
+    private final BluetoothSocket mmSocket;
+    private final BluetoothDevice mmDevice;
 
-    public boolean connect(BluetoothDevice bTDevice, UUID mUUID) {
-        BluetoothSocket temp = null;
+    String TAG = "Connect Thread";
+
+    private BluetoothAdapter mBluetoothAdapter;
+    String NAME;
+    UUID MY_UUID;
+    Context context;
+
+    public ConnectThread(Context context,BluetoothDevice device, BluetoothAdapter bluetoothAdapter, String NAME, UUID uuid) {
+        // Use a temporary object that is later assigned to mmServerSocket
+        // because mmServerSocket is final.
+
+        this.context=context;
+        mBluetoothAdapter = bluetoothAdapter;
+        this.NAME = NAME;
+        MY_UUID = uuid;        // because mmSocket is final.
+        BluetoothSocket tmp = null;
+        mmDevice = device;
+
         try {
-            temp = bTDevice.createRfcommSocketToServiceRecord(mUUID);
+            // Get a BluetoothSocket to connect with the given BluetoothDevice.
+            // MY_UUID is the app's UUID string, also used in the server code.
+            tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
         } catch (IOException e) {
-            Log.d("CONNECTTHREAD", "Could not create RFCOMM socket:" + e.toString());
-            return false;
+            Log.e("Connect Thread", "Socket's create() method failed", e);
         }
-        try {
-            bTSocket.connect();
-        } catch (IOException e) {
-            Log.d("CONNECTTHREAD", "Could not connect: " + e.toString());
-            try {
-                bTSocket.close();
-            } catch (IOException close) {
-                Log.d("CONNECTTHREAD", "Could not close connection:" + e.toString());
-                return false;
-            }
-        }
-        return true;
+        mmSocket = tmp;
     }
 
-    public boolean cancel() {
+    public void run() {
+        // Cancel discovery because it otherwise slows down the connection.
+        if (mBluetoothAdapter.isDiscovering())
+            mBluetoothAdapter.cancelDiscovery();
+
         try {
-            bTSocket.close();
-        } catch (IOException e) {
-            Log.d("CONNECTTHREAD", "Could not close connection:" + e.toString());
-            return false;
+            // Connect to the remote device through the socket. This call blocks
+            // until it succeeds or throws an exception.
+            mmSocket.connect();
+        } catch (IOException connectException) {
+            // Unable to connect; close the socket and return.
+            try {
+                mmSocket.close();
+            } catch (IOException closeException) {
+                Log.e(TAG, "Could not close the client socket", closeException);
+            }
+            return;
         }
-        return true;
+
+        // The connection attempt succeeded. Perform work associated with
+        // the connection in a separate thread.
+        //TODO: connected as client
+
+
+
+
+    }
+
+    // Closes the client socket and causes the thread to finish.
+    public void cancel() {
+        try {
+            mmSocket.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Could not close the client socket", e);
+        }
     }
 }
