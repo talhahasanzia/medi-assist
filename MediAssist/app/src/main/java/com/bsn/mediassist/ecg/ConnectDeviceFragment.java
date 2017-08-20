@@ -70,7 +70,8 @@ public class ConnectDeviceFragment extends Fragment {
     @OnClick(R.id.search)
     public void OnClick(View v) {
 
-        setDiscoverDevices();
+        if (!mBluetoothAdapter.isDiscovering())
+            setDiscoverDevices();
 
 
     }
@@ -96,7 +97,10 @@ public class ConnectDeviceFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_connect_device, container, false);
 
+
         ButterKnife.bind(this, v);
+
+        listView.setClickable(true);
 
         setPairedDevices();
 
@@ -143,8 +147,17 @@ public class ConnectDeviceFragment extends Fragment {
                 if (pairedDevices != null && pairedDevices.size() > 0) {
                     BluetoothDevice bluetoothDevice = (BluetoothDevice) pairedDevices.toArray()[position];
 
-                    if (bluetoothDevice != null)
+                    if (bluetoothDevice != null) {
                         ((EcgActivity) getActivity()).currentBluetoothDevice = bluetoothDevice;
+                        Slide slideTransition = new Slide(Gravity.RIGHT);
+                        slideTransition.setDuration(1000);
+                        EcgInputFragment ecgInputFragment = new EcgInputFragment();
+                        ecgInputFragment.setEnterTransition(slideTransition);
+                        ((EcgActivity) getActivity()).setCurrentScreen(ecgInputFragment);
+
+                        ((EcgActivity) getActivity()).currentScreen = 1;
+
+                    }
                 }
             }
         });
@@ -212,7 +225,7 @@ public class ConnectDeviceFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (pairedDevices != null && pairedDevices.size() > 0) {
+                if (discoveredDevices != null && discoveredDevices.size() > 0) {
                     BluetoothDevice bluetoothDevice = (BluetoothDevice) discoveredDevices.toArray()[position];
 
                     if (bluetoothDevice != null) {
@@ -221,7 +234,7 @@ public class ConnectDeviceFragment extends Fragment {
 
                         Slide slideTransition = new Slide(Gravity.RIGHT);
                         slideTransition.setDuration(1000);
-                        EcgInputFragment ecgInputFragment=new EcgInputFragment();
+                        EcgInputFragment ecgInputFragment = new EcgInputFragment();
                         ecgInputFragment.setEnterTransition(slideTransition);
                         ((EcgActivity) getActivity()).setCurrentScreen(ecgInputFragment);
 
@@ -268,8 +281,7 @@ public class ConnectDeviceFragment extends Fragment {
                 arrayAdapter.notifyDataSetChanged();
 
 
-               // listView.setAdapter(arrayAdapter);
-
+                // listView.setAdapter(arrayAdapter);
 
 
             }

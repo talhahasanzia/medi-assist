@@ -3,12 +3,16 @@ package com.bsn.mediassist.ecg;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bsn.mediassist.R;
 import com.bsn.mediassist.workers.ConnectThread;
@@ -28,9 +32,11 @@ public class EcgInputFragment extends Fragment {
     private UUID DEFAULT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     String NAME;
 
+    public static final String ACTION_CONNECTION_STATUS = "com.bsn.mediassist.BLUETOOTH_STATUS";
 
     public EcgInputFragment() {
         // Required empty public constructor
+
     }
 
     @Override
@@ -42,7 +48,8 @@ public class EcgInputFragment extends Fragment {
         bluetoothAdapter = ecgActivity.mBluetoothAdapter;
         bluetoothDevice = ecgActivity.currentBluetoothDevice;
         NAME = bluetoothDevice.getName();
-        DEFAULT_UUID = bluetoothDevice.getUuids()[0].getUuid();
+        if (bluetoothDevice.getUuids() != null)
+            DEFAULT_UUID = bluetoothDevice.getUuids()[0].getUuid();
 
     }
 
@@ -54,11 +61,33 @@ public class EcgInputFragment extends Fragment {
 
         ButterKnife.bind(this, v);
 
+        IntentFilter intent = new IntentFilter(ACTION_CONNECTION_STATUS);
 
-        ConnectThread connectThread = new ConnectThread(bluetoothDevice, bluetoothAdapter, NAME, DEFAULT_UUID);
+        getActivity().registerReceiver(mReceiver, intent);
+
+        ConnectThread connectThread =
+                new ConnectThread(getActivity(), bluetoothDevice, bluetoothAdapter, NAME, DEFAULT_UUID);
+
+        connectThread.start();
 
 
         return v;
     }
+
+
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+            if (intent.getAction().equals(ACTION_CONNECTION_STATUS)) {
+
+                Toast.makeText(context, "Connection Status:" + intent.getBooleanExtra("status", false), Toast.LENGTH_SHORT).show();
+
+
+            }
+
+        }
+    };
 
 }

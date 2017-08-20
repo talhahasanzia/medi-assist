@@ -1,4 +1,4 @@
- 
+﻿ 
 
 Proposal / Application
 for
@@ -142,7 +142,7 @@ Consent of the Co-Internal Advisor		Signature:
 Consent of the External Advisor (if any)	Signature: 					
 
 
-##11.	Reviewers Committee�s Comments
+##11.	Reviewers Committee’s Comments
 
 
 
