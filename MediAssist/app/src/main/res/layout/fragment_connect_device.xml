@@ -4,10 +4,33 @@
     android:layout_height="match_parent"
     tools:context="com.bsn.mediassist.ecg.ConnectDeviceFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="Connected devices:"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/search"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="end"
+        android:tint="@color/colorPrimary"
+        android:padding="12dp"
+        android:src="@android:drawable/ic_menu_search"
+        />
+
+
+
+    <ListView
+
+        android:dividerHeight="4dp"
+        android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginTop="60dp"></ListView>
 
 </FrameLayout>

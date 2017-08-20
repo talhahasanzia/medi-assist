@@ -1,14 +1,18 @@
 package com.bsn.mediassist.ecg;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.bsn.mediassist.R;
 
@@ -18,8 +22,15 @@ import butterknife.ButterKnife;
 public class EcgActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.view_pager)
-    ViewPager viewPager;
+    public BluetoothAdapter mBluetoothAdapter;
+
+    public BluetoothDevice currentBluetoothDevice;
+
+    @BindView(R.id.frame_layout)
+    FrameLayout frameLayout;
+
+
+    int currentScreen = 0;
 
 
     @Override
@@ -28,60 +39,21 @@ public class EcgActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ecg);
         ButterKnife.bind(this);
 
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
 
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-                return true;
-            }
-        });
-
-
-        ECGPager ecgPager = new ECGPager(getSupportFragmentManager());
-
-
-        viewPager.setAdapter(ecgPager);
-
-
+        Slide slideTransition = new Slide(Gravity.RIGHT);
+        slideTransition.setDuration(1000);
+        BluetoothEnableFragment bluetoothEnableFragment = new BluetoothEnableFragment();
+        bluetoothEnableFragment.setEnterTransition(slideTransition);
+        setCurrentScreen(bluetoothEnableFragment);
 
     }
 
 
-    public class ECGPager extends FragmentStatePagerAdapter {
+    public void setCurrentScreen(Fragment fragment) {
 
-
-        public ECGPager(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            switch (position) {
-
-                case 0:
-
-                    return new BluetiithEnableFragment();
-
-                case 1:
-                    return new ConnectDeviceFragment();
-
-
-                case 2:
-                    return new EcgInputFragment();
-
-                default:
-                    return new BluetiithEnableFragment();
-
-            }
-        }
-
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
 
 
     }
