@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bsn.mediassist.R;
@@ -19,6 +20,7 @@ import com.bsn.mediassist.workers.ConnectThread;
 
 import java.util.UUID;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -31,6 +33,9 @@ public class EcgInputFragment extends Fragment {
     BluetoothDevice bluetoothDevice;
     private UUID DEFAULT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     String NAME;
+
+    @BindView(R.id.connected_device)
+    TextView connectedDevice;
 
     public static final String ACTION_CONNECTION_STATUS = "com.bsn.mediassist.BLUETOOTH_STATUS";
 
@@ -61,6 +66,8 @@ public class EcgInputFragment extends Fragment {
 
         ButterKnife.bind(this, v);
 
+
+        connectedDevice.setText("Pairing with the selected device...");
         IntentFilter intent = new IntentFilter(ACTION_CONNECTION_STATUS);
 
         getActivity().registerReceiver(mReceiver, intent);
@@ -84,6 +91,13 @@ public class EcgInputFragment extends Fragment {
 
                 Toast.makeText(context, "Connection Status:" + intent.getBooleanExtra("status", false), Toast.LENGTH_SHORT).show();
 
+
+                if (intent.getBooleanExtra("status", false)) {
+                    connectedDevice.setText("Connected to: "+bluetoothDevice.getName());
+                } else {
+
+                    connectedDevice.setText("Failed to connect.");
+                }
 
             }
 
