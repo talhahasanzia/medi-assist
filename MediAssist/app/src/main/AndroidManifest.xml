@@ -25,6 +25,10 @@
         </activity>
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".ecg.EcgActivity"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a57d0f5759e846ef56d92335ce9508a7544f3b08" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

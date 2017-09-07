@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -41,17 +43,7 @@ public class EcgInputFragment extends Fragment {
 
     BluetoothAdapter bluetoothAdapter;
     BluetoothDevice bluetoothDevice;
-
-    InputStream aStream = null;
-    InputStreamReader aReader = null;
-
-
-    private static final String UUID_SERIAL_PORT_PROFILE
-            = "00001101-0000-1000-8000-00805F9B34FB";
-
-    private BluetoothSocket mSocket = null;
-    private BufferedReader mBufferedReader = null;
-
+    BluetoothSocket socket;
 
     private UUID DEFAULT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     String NAME;
@@ -71,20 +63,25 @@ public class EcgInputFragment extends Fragment {
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                connectedDevice.setText("Failed to connect.");
+                sampleText.setText(e.getMessage());
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
+                connectedDevice.setText("Failed to connect.");
+                sampleText.setText(e.getMessage());
             }
 
 
             // This is where main activity thread receives messages
             // Put here your handling of incoming messages posted by other threads
 
-
             super.handleMessage(msg);
         }
 
     };
+
+
 
     @BindView(R.id.connected_device)
     TextView connectedDevice;
@@ -103,7 +100,6 @@ public class EcgInputFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
 
 
         EcgActivity ecgActivity = (EcgActivity) getActivity();
@@ -133,6 +129,8 @@ public class EcgInputFragment extends Fragment {
 
         if (bluetoothAdapter.isDiscovering())
             bluetoothAdapter.cancelDiscovery();
+
+        sampleText.setMovementMethod(new ScrollingMovementMethod());
 
         startReceivingData();
 
@@ -171,20 +169,30 @@ public class EcgInputFragment extends Fragment {
 
         try {
 
-            BluetoothSocket socket = (BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class}).invoke(bluetoothDevice, 1);
+           socket= (BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class}).invoke(bluetoothDevice, 1);
 
             socket.connect();
 
-            ConnectedThread connectedThread=new ConnectedThread(socket);
+            connectedDevice.setText("Connected to: " + bluetoothDevice.getName());
+
+            ConnectedThread connectedThread = new ConnectedThread(socket);
 
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            connectedDevice.setText("Failed to connect.");
+            sampleText.setText(e.getMessage());
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+            connectedDevice.setText("Failed to connect.");
+            sampleText.setText(e.getMessage());
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            connectedDevice.setText("Failed to connect.");
+            sampleText.setText(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            connectedDevice.setText("Failed to connect.");
+            sampleText.setText(e.getMessage());
         }
 
 
@@ -194,9 +202,9 @@ public class EcgInputFragment extends Fragment {
     public class ConnectedThread extends Thread {
 
 
-        private  BluetoothSocket mmSocket;
-        private  InputStream mmInStream=null;
-        private  OutputStream mmOutStream=null;
+        private BluetoothSocket mmSocket;
+        private InputStream mmInStream = null;
+        private OutputStream mmOutStream = null;
         private byte[] mmBuffer; // mmBuffer store for the stream
 
         private Handler mHandler;
@@ -210,7 +218,7 @@ public class EcgInputFragment extends Fragment {
             OutputStream tmpOut = null;
 
 
-            mHandler=new Handler();
+            mHandler = new Handler();
             // Get the input and output streams; using temp objects because
             // member streams are final.
             try {
@@ -225,8 +233,6 @@ public class EcgInputFragment extends Fragment {
             }
 
 
-
-
             start();
         }
 
@@ -237,6 +243,7 @@ public class EcgInputFragment extends Fragment {
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
+                    // Read from the InputStream.
                     // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
                     // Send the obtained bytes to the UI activity.
@@ -249,6 +256,7 @@ public class EcgInputFragment extends Fragment {
 
                     if(numBytes>0) {
                         bundle.putByteArray("data", mmBuffer);
+                        bundle.putInt("status",1);
                         readMsg.setData(bundle);
                         readMsg.setTarget(_handler);
                         readMsg.sendToTarget();
@@ -257,9 +265,22 @@ public class EcgInputFragment extends Fragment {
 
 
 
+
+
+
                     //_handler.sendMessage(readMsg);
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);
+
+                    Message readMsg = new Message();
+
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putInt("status",-1);
+                    readMsg.setData(bundle);
+                    readMsg.setTarget(_handler);
+                    readMsg.sendToTarget();
                     break;
                 }
             }
@@ -296,5 +317,18 @@ public class EcgInputFragment extends Fragment {
                 Log.e(TAG, "Could not close the connect socket", e);
             }
         }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(socket.isConnected())
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
     }
 }
