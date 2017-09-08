@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "779940250190",
+    "firebase_url": "https://mediassist-41400.firebaseio.com",
+    "project_id": "mediassist-41400",
+    "storage_bucket": "mediassist-41400.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779940250190:android:40453816865fb70e",
+        "android_client_info": {
+          "package_name": "com.bsn.mediassist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779940250190-osngpc8030kpcsr47lka4mesoojlq41j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bsn.mediassist",
+            "certificate_hash": "51fc7042488aa559befd53f8782251684f78669a"
+          }
+        },
+        {
+          "client_id": "779940250190-t3r8qe53jgg1afe8u8jenbbv0g6j12ig.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACjT4C24SZ3UtZWhIKShJtEjIFaiBCTXc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779940250190-t3r8qe53jgg1afe8u8jenbbv0g6j12ig.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

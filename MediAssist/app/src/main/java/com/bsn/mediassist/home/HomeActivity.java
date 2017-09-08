@@ -3,20 +3,25 @@ package com.bsn.mediassist.home;
 import android.content.Intent;
 import android.graphics.Color;
 
+import android.net.Uri;
 import android.os.Bundle;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bsn.mediassist.R;
 import com.bsn.mediassist.ecg.EcgActivity;
+import com.bsn.mediassist.login.EmailPasswordActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -27,6 +32,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +49,14 @@ public class HomeActivity extends AppCompatActivity
 
     FloatingActionButton fab;
 
+    private FirebaseAuth mAuth;
+
+
+    TextView nameTextView;
+    TextView emailTextView;
+
+
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     ImageView toggle;
 
@@ -83,11 +98,60 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerLayout = navigationView.getHeaderView(0);
+
+        nameTextView = (TextView) headerLayout.findViewById(R.id.user_name);
+
+        emailTextView = (TextView) headerLayout.findViewById(R.id.email_text);
+
         initChart1();
         initChart2();
 
 
+        mAuth = FirebaseAuth.getInstance();
+
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+
+                    if (user != null) {
+                        // Name, email address, and profile photo Url
+                        String name = user.getDisplayName();
+                        String email = user.getEmail();
+
+
+
+                            name=email.substring(0, email.indexOf('@'));
+
+                        nameTextView.setText(name);
+
+                        emailTextView.setText(email);
+
+
+                        Uri photoUrl = user.getPhotoUrl();
+
+                        // The user's ID, unique to the Firebase project. Do NOT use this value to
+                        // authenticate with your backend server, if you have one. Use
+                        // FirebaseUser.getToken() instead.
+                        String uid = user.getUid();
+                    }
+
+                    Log.d("FIREBASE", "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d("FIREBASE", "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
+
+        mAuth.addAuthStateListener(mAuthListener);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -96,6 +160,14 @@ public class HomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
@@ -128,6 +200,9 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_sign) {
+
+            startActivity(new Intent(HomeActivity.this, EmailPasswordActivity.class));
+
             // Handle the camera action
         } else if (id == R.id.nav_help) {
 
