@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.bsn.mediassist.R;
+import com.bsn.mediassist.home.HomeActivity;
 import com.bsn.mediassist.main.MainActivity;
 
 import butterknife.ButterKnife;
@@ -21,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void authenticate() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
 
         startActivity(intent);
         finish();
