@@ -79,6 +79,10 @@ public class EmailPasswordActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+
+                            user.sendEmailVerification();
+
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -201,6 +205,8 @@ public class EmailPasswordActivity extends BaseActivity implements
             findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
             findViewById(R.id.email_password_fields).setVisibility(View.GONE);
             findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
+
+
 
             findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
             finish();

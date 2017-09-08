@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group >
+
         <item
             android:id="@+id/nav_sign"
             android:icon="@android:drawable/alert_dark_frame"
             android:title="Sign In" />
 
 
-    </group>
+
 
 
 

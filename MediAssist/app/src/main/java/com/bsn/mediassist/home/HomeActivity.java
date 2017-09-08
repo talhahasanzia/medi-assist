@@ -203,7 +203,7 @@ public class HomeActivity extends AppCompatActivity
 
             startActivity(new Intent(HomeActivity.this, EmailPasswordActivity.class));
 
-            // Handle the camera action
+
         } else if (id == R.id.nav_help) {
 
         } else if (id == R.id.action_settings) {
