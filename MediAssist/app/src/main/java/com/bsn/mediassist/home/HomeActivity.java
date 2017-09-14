@@ -58,7 +58,6 @@ public class HomeActivity extends AppCompatActivity
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    ImageView toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +80,6 @@ public class HomeActivity extends AppCompatActivity
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        toggle = (ImageView) findViewById(R.id.nav_toggle);
-
-        toggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                } else {
-                    drawer.closeDrawer(GravityCompat.START);
-                }
-            }
-        });
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context="com.bsn.mediassist.login.SignUpActivity">
+
+    <EditText
+        android:id="@+id/signup_email"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+
+        android:id="@+id/signup_password"
+        android:layout_width="match_parent"
+
+        android:layout_height="60dp"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/signup_name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:hint="Name"
+        android:inputType="text" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <EditText
+            android:id="@+id/signup_age"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="0.6"
+
+            android:hint="Age"
+            android:inputType="number" />
+
+        <RadioGroup
+            android:id="@+id/signup_gender_group"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/signup_male_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Male" />
+
+            <RadioButton
+                android:id="@+id/signup_fmale_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Female" />
+
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/signup_blood_p_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Blood Pressure Issue" />
+
+        <CheckBox
+            android:id="@+id/signup_athlete_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="I am Athlete" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <EditText
+            android:id="@+id/signup_doctor_name"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+
+            android:layout_weight="1"
+            android:hint="Doctor's Name"
+            android:inputType="text" />
+
+        <EditText
+
+            android:id="@+id/signup_doctor_number"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+
+            android:hint="Contact"
+            android:inputType="phone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <EditText
+            android:id="@+id/signup_relative1_name"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:hint="Relative's Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/signup_relative1_number"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+
+            android:hint="Contact"
+            android:inputType="phone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <EditText
+            android:id="@+id/signup_relative2_name"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+
+            android:hint="Relative's Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/signup_relative2_number"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+
+            android:hint="Contact"
+            android:inputType="phone" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/sign_up_create_account_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+
+        android:text="Sign Up"
+
+        android:theme="@style/ThemeOverlay.MyDarkButton" />
+
+
+</LinearLayout>

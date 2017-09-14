@@ -8,7 +8,7 @@ import com.bsn.mediassist.R;
 
 public class BaseActivity extends AppCompatActivity {
 
-    @VisibleForTesting
+
     public ProgressDialog mProgressDialog;
 
     public void showProgressDialog() {
