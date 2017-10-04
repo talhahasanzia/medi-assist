@@ -1,18 +1,26 @@
 package com.bsn.mediassist.home;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.bsn.mediassist.R;
 import com.bsn.mediassist.customviews.CustomViewPager;
+import com.bsn.mediassist.emergencycalls.EmergencyCallActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+
+    BottomNavigationView navigation;
 
     boolean isUserSignedIn = false;
 
@@ -59,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-
-        final BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -68,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
 
             isUserSignedIn = true;
+
 
         } else {
 
@@ -139,10 +149,79 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                recreate();
+                if (firebaseAuth.getCurrentUser() != null) {
+                    isUserSignedIn = true;
+                    firebaseAuth.getCurrentUser().reload();
+                } else {
+                    isUserSignedIn = false;
+                }
+
+
+                PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+
+                viewPager.setAdapter(pagerAdapter);
+
+
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        if (position == 0)
+                            navigation.setSelectedItemId(R.id.navigation_home);
+                        else
+                            navigation.setSelectedItemId(R.id.navigation_dashboard);
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+
+                if (!isUserSignedIn)
+                    viewPager.setCurrentItem(1);
+
+
+                navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
             }
         });
 
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS}, 99);
+        }
+
+
+    }
+
+    boolean doItOnce = false;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == 99) {
+
+            for (int result : grantResults) {
+
+
+                if (result == PackageManager.PERMISSION_DENIED) {
+
+                    if (!doItOnce) {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS}, 99);
+
+                        doItOnce = true;
+                    }
+
+                }
+            }
+
+
+        }
     }
 }

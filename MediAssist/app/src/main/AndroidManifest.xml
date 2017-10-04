@@ -6,8 +6,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="false"
@@ -23,22 +25,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.EmailPasswordActivity" />
+
         <activity android:name=".ecg.EcgActivity" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="a57d0f5759e846ef56d92335ce9508a7544f3b08" />
-
-        <activity
-            android:name=".home.HomeActivity"
-            android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".home.MainActivity" />
         <activity android:name=".login.LoginActivity" />
-        <activity
-            android:name=".home.MainActivity"
-            android:label="@string/title_activity_main" />
-        <activity android:name=".login.SignUpActivity"></activity>
+
+        <activity android:name=".login.SignUpActivity" />
+        <activity android:name=".emergencycalls.EmergencyCallActivity"></activity>
     </application>
 
 </manifest>

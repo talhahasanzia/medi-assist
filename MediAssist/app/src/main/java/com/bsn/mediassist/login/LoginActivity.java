@@ -98,20 +98,15 @@ public class LoginActivity extends AppCompatActivity {
 
         if (user != null) {
 
-            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-
-            Toast.makeText(this, "Already signed in.", Toast.LENGTH_SHORT).show();
+          Toast.makeText(this, "Already signed in.", Toast.LENGTH_SHORT).show();
             finish();
 
-            findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
+
 
         } else {
 
 
-            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-            findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-            findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
+
         }
 
     }
@@ -133,13 +128,13 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Login", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Login", "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+
                         }
 
                         // [START_EXCLUDE]

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bsn.mediassist.R;
+import com.bsn.mediassist.emergencycalls.EmergencyCallActivity;
 import com.bsn.mediassist.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,16 +35,30 @@ public class DashboardFragment extends Fragment {
     @BindView(R.id.dashboard_layout)
     LinearLayout dashBoardLayout;
 
-    @OnClick({R.id.logout_image, R.id.logout_text, R.id.logout_view})
+    @BindView(R.id.verify_email_layout)
+    LinearLayout verifyEmailLayout;
+
+
+    @BindView(R.id.send_again_text)
+    TextView sendAgainText;
+
+    @OnClick({R.id.logout_text, R.id.emergency_call})
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.logout_image:
+
             case R.id.logout_text:
-            case R.id.logout_view:
+
                 mAuth.signOut();
-                getActivity().recreate();
+                dashBoardLayout.setVisibility(GONE);
+                loginTextView.setVisibility(View.VISIBLE);
                 Toast.makeText(getActivity(), "Signed Out", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.emergency_call:
+
+                startActivity(new Intent(getActivity(), EmergencyCallActivity.class));
+
                 break;
 
         }
@@ -54,6 +69,8 @@ public class DashboardFragment extends Fragment {
     boolean isUserSignedIn = false;
 
     FirebaseAuth mAuth;
+
+    FirebaseUser user;
 
     @Override
     public void onAttach(Context context) {
@@ -76,12 +93,15 @@ public class DashboardFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
+        user = mAuth.getInstance().getCurrentUser();
+
+
         ButterKnife.bind(this, v);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        verifyEmailLayout.setVisibility(View.GONE);
 
-        if (currentUser != null) {
+        if (user != null) {
 
             isUserSignedIn = true;
 
