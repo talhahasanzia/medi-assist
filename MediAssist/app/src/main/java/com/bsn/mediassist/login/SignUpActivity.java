@@ -2,7 +2,10 @@ package com.bsn.mediassist.login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,13 +21,19 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bsn.mediassist.R;
+import com.bsn.mediassist.data.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Pattern;
 
@@ -83,7 +92,10 @@ public class SignUpActivity extends AppCompatActivity {
     public void OnClick(View v) {
 
 
-        createAccount(emailText.getText().toString(), passText.getText().toString());
+        if (haveNetworkConnection())
+            createAccount(emailText.getText().toString(), passText.getText().toString());
+        else
+            Toast.makeText(this, "No internet connection.", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -104,6 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
     }
+
 
     private void createAccount(String email, String password) {
 
@@ -127,57 +140,80 @@ public class SignUpActivity extends AppCompatActivity {
 
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                    public void onSuccess(AuthResult authResult) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = authResult.getUser();
 
 
-                            user.sendEmailVerification();
-                            // set data here
+                        user.sendEmailVerification();
+                        // set data here
 
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference myRef = database.getReference("users/" + user.getUid());
-
-
-                            myRef.child("name").setValue(name);
-                            myRef.child("age").setValue(age);
-                            myRef.child("gender").setValue(gender);
-                            myRef.child("isBloodPressure").setValue(bloodPressure);
-                            myRef.child("isAthlete").setValue(athlete);
-                            myRef.child("doctorName").setValue(doctorName);
-                            myRef.child("doctorNumber").setValue(doctorNum);
-                            myRef.child("relativeName1").setValue(r1Name);
-                            myRef.child("relativeNumber1").setValue(r1Num);
-                            myRef.child("relativeName2").setValue(r2Name);
-                            myRef.child("relativeNumber2").setValue(r2Num);
-
-                            myRef.push();
-
-                            Intent returnIntent = new Intent();
-                            returnIntent.putExtra("result", successfulSignUp);
-                            setResult(Activity.RESULT_OK, returnIntent);
-                            finish();
-                            successfulSignUp = true;
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("users");
 
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            successfulSignUp = false;
+                        final User userData = new User(
+                                age, doctorName, doctorNum, gender, athlete, bloodPressure, name, r1Name,
+                                r2Name, r1Num, r2Num
 
-                        }
+                        );
 
-                        // [START_EXCLUDE]
+                        myRef.child(user.getUid()).setValue(userData);
+
+
+                        myRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                User user = dataSnapshot.getValue(User.class);
+
+                                if (user != null) {
+                                    Intent returnIntent = new Intent();
+                                    successfulSignUp = true;
+                                    Toast.makeText(SignUpActivity.this, "Welcome, " + user.name, Toast.LENGTH_SHORT).show();
+                                    returnIntent.putExtra("result", successfulSignUp);
+                                    setResult(Activity.RESULT_OK, returnIntent);
+                                    hideProgressDialog();
+                                    finish();
+                                } else {
+                                    successfulSignUp = false;
+                                    Toast.makeText(SignUpActivity.this, "Authentication failed. User data was not saved.",
+                                            Toast.LENGTH_SHORT).show();
+                                    successfulSignUp = false;
+                                    hideProgressDialog();
+                                }
+
+                            }
+
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                successfulSignUp = false;
+                                Toast.makeText(SignUpActivity.this, "Authentication failed. Process got canceled",
+                                        Toast.LENGTH_SHORT).show();
+                                successfulSignUp = false;
+                                hideProgressDialog();
+                            }
+                        });
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        successfulSignUp = false;
+                        Toast.makeText(SignUpActivity.this, "Authentication failed. There was error processing the request.",
+                                Toast.LENGTH_SHORT).show();
+                        successfulSignUp = false;
                         hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
+
+
+        ;
         // [END create_user_with_email]
     }
 
@@ -365,4 +401,23 @@ public class SignUpActivity extends AppCompatActivity {
             mProgressDialog.dismiss();
         }
     }
+
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
 }

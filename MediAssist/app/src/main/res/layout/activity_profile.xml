@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context="com.bsn.mediassist.profile.ProfileActivity">
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="Profile"
+
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+
+
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Name"
+        android:paddingLeft="20dp"
+
+        />
+    <TextView
+        android:id="@+id/name_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="name"
+        android:textSize="30sp"
+        android:paddingLeft="20dp"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Age"
+        android:paddingLeft="20dp"
+
+        />
+    <TextView
+        android:id="@+id/age_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="12"
+        android:textSize="30sp"
+
+
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Gender"
+        android:paddingLeft="20dp"
+
+        />
+    <TextView
+        android:id="@+id/gender_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="F"
+        android:textSize="30sp"
+
+        android:paddingLeft="20dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="I am athlete"
+        android:paddingLeft="20dp"
+
+        />
+
+    <TextView
+        android:id="@+id/athlete_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="yes"
+        android:textSize="30sp"
+
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="I have blood pressure"
+
+        android:paddingLeft="20dp"
+        />
+    <TextView
+        android:id="@+id/bloodpressure_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="yes"
+        android:textSize="30sp"
+
+
+        />
+    <Button
+        android:id="@+id/contact_details"
+        android:layout_marginTop="40dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:text="Emergency Call Details"/>
+</LinearLayout>

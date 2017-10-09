@@ -40,19 +40,19 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/profile_textview"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="Edit Profile"
+            android:text="Profile"
             android:textSize="18sp" />
 
 
         <TextView
+            android:id="@+id/emergency_call"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-           android:id="@+id/emergency_call"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:text="Emergency Call Settings"
@@ -75,11 +75,11 @@
         android:id="@+id/verify_email_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:paddingLeft="20dp"
         android:layout_gravity="bottom"
         android:background="@android:color/holo_red_dark"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingLeft="20dp"
         android:visibility="gone">
 
         <TextView
@@ -88,8 +88,7 @@
             android:layout_weight="1"
             android:text="Email address not verified!"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
-             />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/send_again_text"

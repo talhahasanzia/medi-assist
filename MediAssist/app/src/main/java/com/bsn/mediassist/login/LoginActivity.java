@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
 
 
     }
