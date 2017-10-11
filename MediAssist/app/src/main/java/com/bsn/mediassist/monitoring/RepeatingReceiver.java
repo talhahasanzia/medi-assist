@@ -1,16 +1,13 @@
 package com.bsn.mediassist.monitoring;
 
-import android.Manifest;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -19,7 +16,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -27,9 +23,7 @@ import android.widget.Toast;
 
 import com.bsn.mediassist.R;
 import com.bsn.mediassist.data.User;
-import com.bsn.mediassist.ecg.EcgInputFragment;
 import com.bsn.mediassist.ecg.MessageConstants;
-import com.bsn.mediassist.emergencycalls.EmergencyCallActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -51,7 +45,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -80,6 +73,7 @@ public class RepeatingReceiver extends BroadcastReceiver {
         mAuth = FirebaseAuth.getInstance();
 
         this.context = context;
+       
         if (haveNetworkConnection(context)) {
             processUserData(context);
 
@@ -653,7 +647,7 @@ public class RepeatingReceiver extends BroadcastReceiver {
 
                         str = str.replaceAll("\\D+", "");
 
-                        int bpm = Integer.parseInt(str);
+                        bpm = Integer.parseInt(str);
 
                         String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTimeInMillis());
 

@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment implements UpdateOnUser
 	
 	
 	Dialog dialog;
+	
 	BroadcastReceiver bpmReceiver = new BroadcastReceiver()
 	{
 		@Override
