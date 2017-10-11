@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -54,7 +55,7 @@ public class EcgInputFragment extends Fragment {
         public void handleMessage(Message msg) {
             Log.d("HANDLER_MESSAGE", String.format("Handler.handleMessage(): msg=%s", msg));
 
-            byte[] bytes=msg.getData().getByteArray("data");
+            byte[] bytes = msg.getData().getByteArray("data");
 
             try {
 
@@ -65,8 +66,7 @@ public class EcgInputFragment extends Fragment {
                 e.printStackTrace();
                 connectedDevice.setText("Failed to connect.");
                 sampleText.setText(e.getMessage());
-            }
-            catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 connectedDevice.setText("Failed to connect.");
                 sampleText.setText(e.getMessage());
@@ -80,7 +80,6 @@ public class EcgInputFragment extends Fragment {
         }
 
     };
-
 
 
     @BindView(R.id.connected_device)
@@ -132,6 +131,7 @@ public class EcgInputFragment extends Fragment {
 
         sampleText.setMovementMethod(new ScrollingMovementMethod());
 
+
         startReceivingData();
 
 
@@ -151,12 +151,29 @@ public class EcgInputFragment extends Fragment {
 
                 if (intent.getBooleanExtra("status", false)) {
                     connectedDevice.setText("Connected to: " + bluetoothDevice.getName());
+
+                    SharedPreferences prefs = getActivity().getSharedPreferences(
+                            "com.example.app", Context.MODE_PRIVATE);
+
+                    prefs.edit().putString("BT", bluetoothDevice.getAddress()).commit();
+
+
+                    Toast.makeText(context, "Connection Successful!", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+
+
                     startReceivingData();
 
 
                 } else {
 
                     connectedDevice.setText("Failed to connect.");
+                    Toast.makeText(context, "Connection Not Successful!", Toast.LENGTH_SHORT).show();
+                    SharedPreferences prefs = getActivity().getSharedPreferences(
+                            "com.example.app", Context.MODE_PRIVATE);
+
+                    prefs.edit().putString("BT", "none").commit();
+                    getActivity().finish();
                 }
 
             }
@@ -169,7 +186,15 @@ public class EcgInputFragment extends Fragment {
 
         try {
 
-           socket= (BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class}).invoke(bluetoothDevice, 1);
+            socket = (BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class}).invoke(bluetoothDevice, 1);
+
+            Toast.makeText(getActivity(), "Connection Successful!", Toast.LENGTH_SHORT).show();
+            SharedPreferences prefs = getActivity().getSharedPreferences(
+                    "com.example.app", Context.MODE_PRIVATE);
+
+            prefs.edit().putString("BT", bluetoothDevice.getAddress()).commit();
+            getActivity().finish();
+
 
             socket.connect();
 
@@ -250,22 +275,16 @@ public class EcgInputFragment extends Fragment {
                     Message readMsg = new Message();
 
 
+                    Bundle bundle = new Bundle();
 
-                    Bundle bundle=new Bundle();
 
-
-                    if(numBytes>0) {
+                    if (numBytes > 0) {
                         bundle.putByteArray("data", mmBuffer);
-                        bundle.putInt("status",1);
+                        bundle.putInt("status", 1);
                         readMsg.setData(bundle);
                         readMsg.setTarget(_handler);
                         readMsg.sendToTarget();
                     }
-
-
-
-
-
 
 
                     //_handler.sendMessage(readMsg);
@@ -277,7 +296,7 @@ public class EcgInputFragment extends Fragment {
 
                     Bundle bundle = new Bundle();
 
-                    bundle.putInt("status",-1);
+                    bundle.putInt("status", -1);
                     readMsg.setData(bundle);
                     readMsg.setTarget(_handler);
                     readMsg.sendToTarget();
@@ -323,12 +342,16 @@ public class EcgInputFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(socket.isConnected())
+        if (socket.isConnected())
             try {
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
+
+        getActivity().unregisterReceiver(mReceiver);
 
     }
 }

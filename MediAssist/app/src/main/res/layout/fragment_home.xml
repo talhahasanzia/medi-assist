@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.bsn.mediassist.home.HomeFragment">
 
 
@@ -30,6 +30,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/last_bpm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -46,6 +47,7 @@
                     android:src="@drawable/heart" />
 
                 <TextView
+                    android:id="@+id/last_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -106,26 +108,19 @@
                 android:text="Heart rate history (average of each day)"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
-                <com.github.mikephil.charting.charts.LineChart
+
+                <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"></com.github.mikephil.charting.charts.LineChart>
+                    android:layout_weight="1"></com.github.mikephil.charting.charts.BarChart>
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/new_heartbeat"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginBottom="4dp"
-                    android:src="@android:drawable/ic_input_add"
-                    app:rippleColor="@color/colorDanger"
-                    android:background="@color/colorDanger"
-                    android:tint="@android:color/white"
-                    android:layout_height="wrap_content" />
+
             </FrameLayout>
         </LinearLayout>
 
@@ -149,32 +144,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
+
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chart2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"></com.github.mikephil.charting.charts.LineChart>
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/new_temp"
-                    android:tint="@android:color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginBottom="4dp"
-                    android:src="@android:drawable/ic_input_add"
-                    app:rippleColor="@color/colorDanger"
-                    android:background="@color/colorDanger"
-                    android:layout_height="wrap_content" />
+
             </FrameLayout>
         </LinearLayout>
 
 
-
-
     </LinearLayout>
-
-
-
 
 
 </FrameLayout>

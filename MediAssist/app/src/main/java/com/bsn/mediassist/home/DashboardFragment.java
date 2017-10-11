@@ -4,6 +4,8 @@ package com.bsn.mediassist.home;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -160,13 +162,25 @@ public class DashboardFragment extends Fragment {
             });
 
         }
+        if (haveNetworkConnection(getActivity()))
+            getUserData();
+        else
+        {
+            Toast.makeText(getActivity(), "No network!", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+
+    void getUserData() {
 
 
         if (mAuth != null && mAuth.getCurrentUser() != null) {
 
             // Get a reference to our posts
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
-           ref= database.getReference(baseURL + mAuth.getCurrentUser().getUid());
+            ref = database.getReference(baseURL + mAuth.getCurrentUser().getUid());
 
             final ProgressDialog progress = ProgressDialog.show(getActivity(), "Syncing", "Please wait");
             progress.setIndeterminate(true);
@@ -200,6 +214,7 @@ public class DashboardFragment extends Fragment {
             Toast.makeText(getActivity(), "No user logged in.", Toast.LENGTH_SHORT).show();
 
         }
+
     }
 
     @Override
@@ -207,5 +222,23 @@ public class DashboardFragment extends Fragment {
         super.onDestroy();
 
 
+    }
+
+
+    private boolean haveNetworkConnection(Context context) {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 }

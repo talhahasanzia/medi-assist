@@ -12,10 +12,8 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.transition.Slide;
 import android.view.Gravity;
@@ -24,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +49,7 @@ public class ConnectDeviceFragment extends Fragment {
     BluetoothAdapter mBluetoothAdapter;
 
 
+    ArrayAdapter<String> arrayAdapter;
     Set<BluetoothDevice> pairedDevices = null;
 
 
@@ -64,7 +62,7 @@ public class ConnectDeviceFragment extends Fragment {
     @BindView(R.id.listview)
     ListView listView;
 
-    ArrayAdapter<String> arrayAdapter;
+
 
 
     @OnClick(R.id.search)
@@ -205,7 +203,7 @@ public class ConnectDeviceFragment extends Fragment {
         IntentFilter filter = new IntentFilter(ACTION_FOUND);
         filter.addAction(ACTION_DISCOVERY_FINISHED);
         filter.addAction(ACTION_DISCOVERY_STARTED);
-        getActivity().registerReceiver(mReceiver, filter);
+        getActivity().registerReceiver(mBTReceiver, filter);
 
 
         mBluetoothAdapter.startDiscovery();
@@ -267,7 +265,7 @@ public class ConnectDeviceFragment extends Fragment {
     }
 
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBTReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (ACTION_FOUND.equals(action)) {

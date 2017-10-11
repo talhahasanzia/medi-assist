@@ -35,7 +35,7 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-location:11.0.0'
 
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'

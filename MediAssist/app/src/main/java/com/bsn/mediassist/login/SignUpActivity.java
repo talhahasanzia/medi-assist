@@ -157,7 +157,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                         final User userData = new User(
                                 age, doctorName, doctorNum, gender, athlete, bloodPressure, name, r1Name,
-                                r2Name, r1Num, r2Num
+                                r2Name, r1Num, r2Num,"none"
 
                         );
 

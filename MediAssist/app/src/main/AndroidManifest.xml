@@ -32,7 +32,12 @@
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".login.SignUpActivity" />
         <activity android:name=".emergencycalls.EmergencyCallActivity" />
-        <activity android:name=".profile.ProfileActivity"></activity>
+        <activity android:name=".profile.ProfileActivity" />
+
+        <receiver
+            android:name=".monitoring.RepeatingReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

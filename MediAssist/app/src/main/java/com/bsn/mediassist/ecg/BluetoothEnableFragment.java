@@ -70,11 +70,13 @@ public class BluetoothEnableFragment extends Fragment {
         ButterKnife.bind(this, v);
 
 
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         if (bluetoothAdapter.isEnabled()) {
 
             Slide slideTransition = new Slide(Gravity.RIGHT);
             slideTransition.setDuration(1000);
-            ConnectDeviceFragment connectDeviceFragment=new ConnectDeviceFragment();
+            ConnectDeviceFragment connectDeviceFragment = new ConnectDeviceFragment();
             connectDeviceFragment.setEnterTransition(slideTransition);
             ((EcgActivity) getActivity()).setCurrentScreen(connectDeviceFragment);
 
@@ -99,7 +101,7 @@ public class BluetoothEnableFragment extends Fragment {
 
                 Slide slideTransition = new Slide(Gravity.RIGHT);
                 slideTransition.setDuration(1000);
-                ConnectDeviceFragment connectDeviceFragment=new ConnectDeviceFragment();
+                ConnectDeviceFragment connectDeviceFragment = new ConnectDeviceFragment();
                 connectDeviceFragment.setEnterTransition(slideTransition);
                 ((EcgActivity) getActivity()).setCurrentScreen(connectDeviceFragment);
 
@@ -136,7 +138,7 @@ public class BluetoothEnableFragment extends Fragment {
 
                         Slide slideTransition = new Slide(Gravity.RIGHT);
                         slideTransition.setDuration(1000);
-                        ConnectDeviceFragment connectDeviceFragment=new ConnectDeviceFragment();
+                        ConnectDeviceFragment connectDeviceFragment = new ConnectDeviceFragment();
                         connectDeviceFragment.setEnterTransition(slideTransition);
                         ((EcgActivity) getActivity()).setCurrentScreen(connectDeviceFragment);
 
